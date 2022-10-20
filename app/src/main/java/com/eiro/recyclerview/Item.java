@@ -2,11 +2,14 @@ package com.eiro.recyclerview;
 
 import androidx.annotation.NonNull;
 
+import java.util.Calendar;
 import java.util.Objects;
 
 public class Item {
 
     private String name;
+    private Calendar created;
+    private boolean done;
 
     public String getName() {
         return name;
@@ -16,9 +19,26 @@ public class Item {
         this.name = name;
     }
 
-    public Item(String name)
+    public Calendar getCreated() {
+        return created;
+    }
+
+    public void setCreated(Calendar created) {
+        this.created = created;
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
+
+    public Item(String name, Calendar created)
     {
         this.name = name;
+        this.created = created;
     }
 
     @Override
