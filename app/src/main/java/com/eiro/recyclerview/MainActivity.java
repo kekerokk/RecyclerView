@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,8 +20,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    private final List<Item> items = new ArrayList<>();
-    private final RecyclerView.Adapter adapter = new ItemAdapter(this.items);
+    private final List<Item> Items = new ArrayList<>();
+    private final RecyclerView.Adapter adapter = new ItemAdapter(this.Items);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +36,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void add(View view)
     {
-        EditText edit = this.findViewById(R.id.editText);
-        this.items.add(new Item(edit.getText().toString(), Calendar.getInstance()));
+
+        /*EditText edit = this.findViewById(R.id.editText);
+        this.Items.add(new Item(edit.getText().toString(), Calendar.getInstance()));
         edit.setText("");
-        adapter.notifyItemInserted(this.items.size()-1);
+        adapter.notifyItemInserted(this.Items.size()-1);*/
+    }
+
+    public void GoAdding(View view)
+    {
+        val intent = Intent(this@MainActivity,)
     }
 
     private static final class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
@@ -58,8 +63,7 @@ public class MainActivity extends AppCompatActivity {
         {
             return new RecyclerView.ViewHolder (
             LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.items,parent,false)
-
+                    .inflate(R.layout.finaly,parent,false)
             ) {};
         }
 
@@ -69,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             TextView name = holder.itemView.findViewById(R.id.name);
             TextView created = holder.itemView.findViewById(R.id.created);
             Item item = this.items.get(index);
-            name.setText(String.format("%s. %s",index, this.items.get(index).getName()));
+            name.setText(String.format("%s. %s",index, item.getName()));
             created.setText(format(item.getCreated()));
             CheckBox done = holder.itemView.findViewById(R.id.done);
             done.setOnCheckedChangeListener((view,checked)-> item.setDone(checked));
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         private String format (Calendar cal) {
             return String.format(
-                    Locale.getDefault(), "80%d. 802d. 8d",
+                    Locale.getDefault(), "%02d. %02d. %d",
                     cal.get(Calendar.DAY_OF_MONTH),cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)
             );
         }
