@@ -43,10 +43,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyItemInserted(this.Items.size()-1);*/
     }
 
-    public void GoAdding(View view)
-    {
-        val intent = Intent(this@MainActivity,)
-    }
+
 
     private static final class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     {

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dataBase">
+
+    <fragment
+        android:id="@+id/addingFragment"
+        android:name="com.eiro.recyclerview.AddingFragment"
+        android:label="fragment_adding"
+        tools:layout="@layout/fragment_adding" >
+        <action
+            android:id="@+id/action_addingFragment_to_dataBase"
+            app:destination="@id/dataBase" />
+    </fragment>
+    <fragment
+        android:id="@+id/dataBase"
+        android:name="com.eiro.recyclerview.DataBase"
+        android:label="fragment_data_base"
+        tools:layout="@layout/fragment_data_base" >
+        <action
+            android:id="@+id/action_dataBase_to_addingFragment"
+            app:destination="@id/addingFragment" />
+    </fragment>
+</navigation>
