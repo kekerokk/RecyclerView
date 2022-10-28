@@ -13,7 +13,7 @@
         android:layout_marginStart="158dp"
         android:layout_marginEnd="159dp"
         android:layout_marginBottom="100dp"
-        android:text="Button"
+        android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -28,7 +28,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        android:text="Name"
+        android:text="Number"
         app:layout_constraintBottom_toTopOf="@+id/addCarButton"
         app:layout_constraintEnd_toEndOf="parent" />
 

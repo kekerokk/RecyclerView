@@ -3,10 +3,19 @@ package com.eiro.recyclerview;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+
+import android.telecom.Connection;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import java.net.Socket;
+
+import com.eiro.recyclerview.databinding.FragmentAddingBinding;
+import com.eiro.recyclerview.databinding.FragmentDataBaseBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +23,37 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class AddingFragment extends Fragment {
+
+    private FragmentAddingBinding __binding;
+    private Button      mBtnSend  = null;
+    private Connector mConnect  = null;
+
+    private  String     HOST      = "localhost";
+    private  int        PORT      = 11000;
+
+    private  String     LOG_TAG   = "SOCKET";
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        mBtnSend = __binding.addCarButton;
+
+        onOpenClick();
+
+        mBtnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSendClick();
+            }
+        });
+    }
+
+    private void SaveData()
+    {
+
+    }
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,19 +86,89 @@ public class AddingFragment extends Fragment {
         return fragment;
     }
 
-    @Override
+    /*@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-    }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        __binding = FragmentAddingBinding.inflate(inflater,container,false);
+
+        __binding.addCarButton.setOnClickListener(view -> {
+            if(__binding.carName.getText().toString() != "" && __binding.carNumber.getText().toString() != "")
+                //sendData
+            Navigation.findNavController(view).navigate(R.id.action_addingFragment_to_dataBase);
+        });
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_adding, container, false);
+        return __binding.getRoot();
+        // Inflate the layout for this fragment
+    }
+
+    private void onOpenClick()
+    {
+        // Создание подключения
+        mConnect = new Connector(HOST,PORT);
+        // Открытие сокета в отдельном потоке
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mConnect.openConnection();
+                    // Разблокирование кнопок в UI потоке
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mBtnSend.setEnabled(true);
+                            mBtnClose.setEnabled(true);
+                        }
+                    });
+                    Log.d(LOG_TAG, "Соединение установлено");
+                    Log.d(LOG_TAG, "(mConnect != null) = "
+                            + (mConnect != null));
+                } catch (Exception e) {
+                    Log.e(LOG_TAG, e.getMessage());
+                    mConnect = null;
+                }
+            }
+        }).start();
+    }
+    private void onSendClick()
+    {
+        if (mConnect == null) {
+            Log.d(LOG_TAG, "Соединение не установлено");
+        }  else {
+            Log.d(LOG_TAG, "Отправка сообщения");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String text;
+                        text = mEdit.getText().toString();
+                        if (text.trim().length() == 0)
+                            text = "Test message";
+                        // отправляем сообщение
+                        mConnect.sendData(text.getBytes());
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG, e.getMessage());
+                    }
+                }
+            }).start();
+        }
+    }
+    private void onCloseClick()
+    {
+        // Закрытие соединения
+        mConnect.closeConnection();
+        // Блокирование кнопок
+        mBtnSend .setEnabled(false);
+        mBtnClose.setEnabled(false);
+        Log.d(LOG_TAG, "Соединение закрыто");
     }
 }
