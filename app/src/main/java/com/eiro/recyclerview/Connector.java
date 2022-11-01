@@ -29,7 +29,7 @@ public class Connector {
         this.mPort = port;
     }
 
-    public void ConvertData(String carName, String carNumber) throws Exception {
+    /*public void ConvertData(String carName, String carNumber) throws Exception {
         CarItem item = new CarItem();
         item.setCarName(carName);
         item.setCarNumber(carNumber);
@@ -37,7 +37,7 @@ public class Connector {
         byte[] byteArrays = senditem.getBytes();
 
         sendData(byteArrays);
-    }
+    }*/
 
     // Метод открытия сокета
     public void openConnection() throws Exception

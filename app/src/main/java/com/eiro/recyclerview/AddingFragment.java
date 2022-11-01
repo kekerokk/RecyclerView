@@ -1,5 +1,7 @@
 package com.eiro.recyclerview;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,13 +9,19 @@ import androidx.navigation.Navigation;
 
 
 import android.telecom.Connection;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import java.net.Socket;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+//import java.lang.Thread;
 
+import com.eiro.recyclerview.databinding.ActivityMainBinding;
 import com.eiro.recyclerview.databinding.FragmentAddingBinding;
 import com.eiro.recyclerview.databinding.FragmentDataBaseBinding;
 
@@ -25,6 +33,8 @@ import com.eiro.recyclerview.databinding.FragmentDataBaseBinding;
 public class AddingFragment extends Fragment {
 
     private FragmentAddingBinding __binding;
+    private CarItem item;
+
     private Button      mBtnSend  = null;
     private Connector mConnect  = null;
 
@@ -39,8 +49,7 @@ public class AddingFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mBtnSend = __binding.addCarButton;
-
-        onOpenClick();
+        item = new CarItem();
 
         mBtnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,11 +57,6 @@ public class AddingFragment extends Fragment {
                 onSendClick();
             }
         });
-    }
-
-    private void SaveData()
-    {
-
     }
 
     // TODO: Rename parameter arguments, choose names that match
@@ -95,6 +99,7 @@ public class AddingFragment extends Fragment {
         }
     }*/
 
+    @SuppressLint("SuspiciousIndentation")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -111,34 +116,7 @@ public class AddingFragment extends Fragment {
         // Inflate the layout for this fragment
     }
 
-    private void onOpenClick()
-    {
-        // Создание подключения
-        mConnect = new Connector(HOST,PORT);
-        // Открытие сокета в отдельном потоке
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    mConnect.openConnection();
-                    // Разблокирование кнопок в UI потоке
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mBtnSend.setEnabled(true);
-                            mBtnClose.setEnabled(true);
-                        }
-                    });
-                    Log.d(LOG_TAG, "Соединение установлено");
-                    Log.d(LOG_TAG, "(mConnect != null) = "
-                            + (mConnect != null));
-                } catch (Exception e) {
-                    Log.e(LOG_TAG, e.getMessage());
-                    mConnect = null;
-                }
-            }
-        }).start();
-    }
+
     private void onSendClick()
     {
         if (mConnect == null) {
@@ -150,9 +128,13 @@ public class AddingFragment extends Fragment {
                 public void run() {
                     try {
                         String text;
-                        text = mEdit.getText().toString();
-                        if (text.trim().length() == 0)
-                            text = "Test message";
+
+                        item.setCarName(__binding.carName.getText().toString());
+                        item.setCarNumber(__binding.carNumber.getText().toString());
+
+                        Message mess = new Message();
+                        text = mess.AddDataMessageConvert(item);
+
                         // отправляем сообщение
                         mConnect.sendData(text.getBytes());
                     } catch (Exception e) {
@@ -161,14 +143,5 @@ public class AddingFragment extends Fragment {
                 }
             }).start();
         }
-    }
-    private void onCloseClick()
-    {
-        // Закрытие соединения
-        mConnect.closeConnection();
-        // Блокирование кнопок
-        mBtnSend .setEnabled(false);
-        mBtnClose.setEnabled(false);
-        Log.d(LOG_TAG, "Соединение закрыто");
     }
 }

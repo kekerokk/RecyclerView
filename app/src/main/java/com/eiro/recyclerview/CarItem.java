@@ -16,7 +16,13 @@ public class CarItem {
     public void setCarName(String carName) {
         this.carName = carName;
     }
+    public CarItem(String carnumber, String carname)
+    {
+        carNumber = carnumber;
+        carName = carname;
+    }
+    public CarItem(){};
 
     String carNumber;
     String carName;
-}
+};
