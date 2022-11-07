@@ -3,10 +3,13 @@ package com.eiro.recyclerview;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.eiro.recyclerview.databinding.FragmentDataBaseBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +17,8 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class DataBase extends Fragment {
+
+    private FragmentDataBaseBinding __binding;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,6 +64,10 @@ public class DataBase extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_data_base, container, false);
+        __binding = FragmentDataBaseBinding.inflate(inflater,container,false);
+        __binding.addButton.setOnClickListener(view -> {
+            Navigation.findNavController(view).navigate(R.id.action_dataBase_to_addingFragment);
+        });
+        return __binding.getRoot();
     }
 }

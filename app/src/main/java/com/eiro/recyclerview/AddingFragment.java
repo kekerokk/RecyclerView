@@ -49,7 +49,9 @@ public class AddingFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mBtnSend = __binding.addCarButton;
+        mConnect = new Connector(HOST,PORT);
         item = new CarItem();
+
 
         mBtnSend.setOnClickListener(new View.OnClickListener() {
             @Override
