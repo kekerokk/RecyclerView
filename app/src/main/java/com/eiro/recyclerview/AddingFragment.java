@@ -7,6 +7,7 @@ import androidx.navigation.Navigation;
 
 
 import android.telecom.Connection;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.net.Socket;
 
 import com.eiro.recyclerview.databinding.FragmentAddingBinding;
 import com.eiro.recyclerview.databinding.FragmentDataBaseBinding;
+import com.google.gson.Gson;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +29,7 @@ public class AddingFragment extends Fragment {
     private FragmentAddingBinding __binding;
     private Button      mBtnSend  = null;
     private Connector mConnect  = null;
+    private Gson gson = new Gson();
 
     private  String     HOST      = "localhost";
     private  int        PORT      = 11000;
@@ -39,6 +42,7 @@ public class AddingFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mBtnSend = __binding.addCarButton;
+        //mConnect = new Connector(HOST,PORT);
 
         onOpenClick();
 
@@ -122,13 +126,6 @@ public class AddingFragment extends Fragment {
                 try {
                     mConnect.openConnection();
                     // Разблокирование кнопок в UI потоке
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mBtnSend.setEnabled(true);
-                            mBtnClose.setEnabled(true);
-                        }
-                    });
                     Log.d(LOG_TAG, "Соединение установлено");
                     Log.d(LOG_TAG, "(mConnect != null) = "
                             + (mConnect != null));
@@ -139,6 +136,7 @@ public class AddingFragment extends Fragment {
             }
         }).start();
     }
+
     private void onSendClick()
     {
         if (mConnect == null) {
@@ -149,26 +147,19 @@ public class AddingFragment extends Fragment {
                 @Override
                 public void run() {
                     try {
-                        String text;
-                        text = mEdit.getText().toString();
-                        if (text.trim().length() == 0)
-                            text = "Test message";
+                        //Do Message
+                        CarItem item = new CarItem();
+                        item.setCarNumber(__binding.carNumber.getText().toString());
+                        item.setCarName(__binding.carName.getText().toString());
+
+                        String message = gson.toJson(item);
                         // отправляем сообщение
-                        mConnect.sendData(text.getBytes());
+                        mConnect.sendData(message.getBytes());
                     } catch (Exception e) {
                         Log.e(LOG_TAG, e.getMessage());
                     }
                 }
             }).start();
         }
-    }
-    private void onCloseClick()
-    {
-        // Закрытие соединения
-        mConnect.closeConnection();
-        // Блокирование кнопок
-        mBtnSend .setEnabled(false);
-        mBtnClose.setEnabled(false);
-        Log.d(LOG_TAG, "Соединение закрыто");
     }
 }
