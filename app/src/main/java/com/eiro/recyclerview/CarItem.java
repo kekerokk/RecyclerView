@@ -16,6 +16,13 @@ public class CarItem {
     public void setCarName(String carName) {
         this.carName = carName;
     }
+    public boolean isCheck() {
+        return isCheck;
+    }
+
+    public void setCheck(boolean check) {
+        isCheck = check;
+    }
     public CarItem(String carnumber, String carname)
     {
         carNumber = carnumber;
@@ -25,4 +32,7 @@ public class CarItem {
 
     String carNumber;
     String carName;
+
+    boolean isCheck;
+
 };

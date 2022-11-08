@@ -1,5 +1,7 @@
 package com.eiro.recyclerview;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,10 +16,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import java.net.Socket;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+//import java.lang.Thread;
 
+import com.eiro.recyclerview.databinding.ActivityMainBinding;
 import com.eiro.recyclerview.databinding.FragmentAddingBinding;
 import com.eiro.recyclerview.databinding.FragmentDataBaseBinding;
-import com.google.gson.Gson;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,9 +33,10 @@ import com.google.gson.Gson;
 public class AddingFragment extends Fragment {
 
     private FragmentAddingBinding __binding;
+    private CarItem item;
+
     private Button      mBtnSend  = null;
     private Connector mConnect  = null;
-    private Gson gson = new Gson();
 
     private  String     HOST      = "localhost";
     private  int        PORT      = 11000;
@@ -40,22 +47,6 @@ public class AddingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        mBtnSend = __binding.addCarButton;
-        //mConnect = new Connector(HOST,PORT);
-
-        onOpenClick();
-
-        mBtnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSendClick();
-            }
-        });
-    }
-
-    private void SaveData()
-    {
 
     }
 
@@ -99,6 +90,7 @@ public class AddingFragment extends Fragment {
         }
     }*/
 
+    @SuppressLint("SuspiciousIndentation")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -110,32 +102,23 @@ public class AddingFragment extends Fragment {
             Navigation.findNavController(view).navigate(R.id.action_addingFragment_to_dataBase);
         });
 
+        mBtnSend = __binding.addCarButton;
+        mConnect = new Connector(HOST,PORT);
+        item = new CarItem();
+
+
+        mBtnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSendClick();
+            }
+        });
+
         // Inflate the layout for this fragment
         return __binding.getRoot();
         // Inflate the layout for this fragment
     }
 
-    private void onOpenClick()
-    {
-        // Создание подключения
-        mConnect = new Connector(HOST,PORT);
-        // Открытие сокета в отдельном потоке
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    mConnect.openConnection();
-                    // Разблокирование кнопок в UI потоке
-                    Log.d(LOG_TAG, "Соединение установлено");
-                    Log.d(LOG_TAG, "(mConnect != null) = "
-                            + (mConnect != null));
-                } catch (Exception e) {
-                    Log.e(LOG_TAG, e.getMessage());
-                    mConnect = null;
-                }
-            }
-        }).start();
-    }
 
     private void onSendClick()
     {
@@ -147,14 +130,16 @@ public class AddingFragment extends Fragment {
                 @Override
                 public void run() {
                     try {
-                        //Do Message
-                        CarItem item = new CarItem();
-                        item.setCarNumber(__binding.carNumber.getText().toString());
-                        item.setCarName(__binding.carName.getText().toString());
+                        String text;
 
-                        String message = gson.toJson(item);
+                        item.setCarName(__binding.carName.getText().toString());
+                        item.setCarNumber(__binding.carNumber.getText().toString());
+
+                        Message mess = new Message();
+                        text = mess.AddDataMessageConvert(item);
+
                         // отправляем сообщение
-                        mConnect.sendData(message.getBytes());
+                        mConnect.sendData(text.getBytes());
                     } catch (Exception e) {
                         Log.e(LOG_TAG, e.getMessage());
                     }

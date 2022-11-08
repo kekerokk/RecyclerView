@@ -9,29 +9,44 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="10dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/created"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/NumberTextView"
+        app:layout_constraintTop_toTopOf="@+id/NumberTextView" />
 
     <TextView
-        android:id="@+id/created"
+        android:id="@+id/number"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="10dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/name"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintStart_toEndOf="@+id/NameTextView"
+        app:layout_constraintTop_toTopOf="@+id/NameTextView" />
 
     <CheckBox
         android:id="@+id/done"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="-15dp"
+        android:layout_marginEnd="5dp"
         android:text=""
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/NumberTextView" />
+
+    <TextView
+        android:id="@+id/NumberTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Номер:"
+        tools:layout_editor_absoluteX="65dp"
+        tools:layout_editor_absoluteY="27dp" />
+
+    <TextView
+        android:id="@+id/NameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Имя:"
+        app:layout_constraintTop_toTopOf="@+id/NumberTextView"
+        tools:layout_editor_absoluteX="196dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,12 +4,19 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.eiro.recyclerview.databinding.FragmentDataBaseBinding;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,5 +76,43 @@ public class DataBase extends Fragment {
             Navigation.findNavController(view).navigate(R.id.action_dataBase_to_addingFragment);
         });
         return __binding.getRoot();
+    }
+
+    private static final class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+    {
+        private final List<CarItem> items;
+
+        public ItemAdapter(List<CarItem> items)
+        {
+            this.items = items;
+        }
+
+        @NotNull
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int index)
+        {
+            return new RecyclerView.ViewHolder (
+                    LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.finaly,parent,false)
+            ) {};
+        }
+
+        @Override
+        public void onBindViewHolder (@NotNull RecyclerView.ViewHolder holder, int index)
+        {
+            TextView name = holder.itemView.findViewById(R.id.name);
+            TextView number = holder.itemView.findViewById(R.id.number);
+            CarItem item = this.items.get(index);
+            name.setText(String.format("%s. %s",index, item.getCarName()));
+            number.setText(String.format("%s. %s",index, item.getCarNumber()));
+            CheckBox done = holder.itemView.findViewById(R.id.done);
+            done.setOnCheckedChangeListener((view,checked)-> item.setCheck(checked));
+        }
+
+
+        @Override
+        public int getItemCount() {
+            return this.items.size();
+        }
     }
 }
